@@ -6,6 +6,7 @@
     "build": "tsc && vite build",
     "serve": "vite preview"
   },
+  "main": "dist/react-auto-scroll-list.es.js",
   "dependencies": {
     "ahooks": "^2.10.12",
     "classnames": "^2.3.1",
