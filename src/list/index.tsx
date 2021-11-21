@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useRef,
-  RefObject,
-  useCallback,
-  useEffect,
-} from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useInterval, useSize } from "ahooks";
 import classnames from "classnames";
 import mockData from "./mockData";
@@ -14,27 +8,43 @@ const ReactAutoScrollList: React.FC = () => {
   const [activeItemIndex, setActiveItemIndex] = React.useState<number>(0);
   const [interval, setInterval] = useState<number>(1000);
   const containerRef = useRef<HTMLDivElement>(null);
-  const listItemRef = useRef(null);
   const containerSize = useSize(containerRef);
-  const listItemSize = useSize(listItemRef);
-
   useInterval(() => {
     if (activeItemIndex === mockData.length - 1) {
       setActiveItemIndex(0);
+      containerRef.current?.scrollTo({
+        left: 0,
+        top: 0,
+      });
     } else {
       setActiveItemIndex(activeItemIndex + 1);
     }
   }, interval);
 
+  // 判断是否到底
   useEffect(() => {
-    if (containerSize.height && listItemSize.height) {
-      const count = Math.ceil(containerSize?.height / listItemSize?.height);
-      if (activeItemIndex % (count - 1) === 0) {
-        // containerRef.current?.scrollTop(3);
-        console.log("我到底了");
+    const currentDom = containerRef.current?.children[
+      activeItemIndex
+    ] as HTMLElement;
+    if (containerSize.height && currentDom.offsetHeight) {
+      const itemCount = Math.floor(
+        containerSize.height / currentDom.offsetHeight
+      );
+      const offsetTop = currentDom?.offsetTop;
+      const scrollTop = containerRef.current?.scrollTop || 0;
+      const lastChildToTop = containerSize.height - currentDom.offsetHeight;
+      if (offsetTop - scrollTop >= lastChildToTop) {
+        containerRef.current?.scrollTo({
+          left: 0,
+          top:
+            scrollTop +
+            (offsetTop - scrollTop) -
+            Math.floor(itemCount / 2) * currentDom.offsetHeight,
+        });
       }
     }
-  }, [containerSize, listItemSize, activeItemIndex]);
+  }, [activeItemIndex]);
+
   return (
     <div className={styles.container} ref={containerRef}>
       {mockData.map((ele, index) => {
@@ -42,7 +52,7 @@ const ReactAutoScrollList: React.FC = () => {
           [styles.active]: activeItemIndex === index,
         });
         return (
-          <div className={listClassName} key={index} ref={listItemRef}>
+          <div className={listClassName} key={index}>
             {ele.label}
           </div>
         );
