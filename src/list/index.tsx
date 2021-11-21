@@ -1,16 +1,24 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useInterval, useSize } from "ahooks";
 import classnames from "classnames";
-import mockData from "./mockData";
-import styles from "./index.module.less";
+import type { IReactAutoScrollList } from "./interface";
 
-const ReactAutoScrollList: React.FC = () => {
+function ReactAutoScrollList<Item>(props: IReactAutoScrollList<Item>) {
+  const {
+    data,
+    timeInterval = 1000,
+    renderItem,
+    keyExtractor,
+    className,
+  } = props;
   const [activeItemIndex, setActiveItemIndex] = React.useState<number>(0);
-  const [interval, setInterval] = useState<number>(1000);
+  const [interval, setInterval] = useState<number | null>(timeInterval);
   const containerRef = useRef<HTMLDivElement>(null);
   const containerSize = useSize(containerRef);
+  const containerClassName = classnames(className);
+
   useInterval(() => {
-    if (activeItemIndex === mockData.length - 1) {
+    if (activeItemIndex === data.length - 1) {
       setActiveItemIndex(0);
       containerRef.current?.scrollTo({
         left: 0,
@@ -20,6 +28,17 @@ const ReactAutoScrollList: React.FC = () => {
       setActiveItemIndex(activeItemIndex + 1);
     }
   }, interval);
+
+  const handleClickItem = (item: Item, index: number) => {
+    setInterval(null);
+    setActiveItemIndex(index);
+  };
+
+  useEffect(() => {
+    if (interval === null) {
+      setInterval(timeInterval);
+    }
+  }, [interval]);
 
   // 判断是否到底
   useEffect(() => {
@@ -46,19 +65,19 @@ const ReactAutoScrollList: React.FC = () => {
   }, [activeItemIndex]);
 
   return (
-    <div className={styles.container} ref={containerRef}>
-      {mockData.map((ele, index) => {
-        const listClassName = classnames(styles.listItem, {
-          [styles.active]: activeItemIndex === index,
-        });
+    <div className={containerClassName} ref={containerRef}>
+      {data.map((ele, index) => {
+        const isActive = activeItemIndex === index;
+        const listNode = renderItem(ele, index, isActive);
+        const key = keyExtractor(ele, index) || index;
         return (
-          <div className={listClassName} key={index}>
-            {ele.label}
+          <div onClick={() => handleClickItem(ele, index)} key={key}>
+            {listNode}
           </div>
         );
       })}
     </div>
   );
-};
+}
 
 export default ReactAutoScrollList;
