@@ -1,18 +1,19 @@
+import classnames from "classnames";
 import ReactAutoScrollList from "./list";
 import mockData from "./mockData";
 import styles from "./App.module.less";
 
 function App() {
   return (
-    <div className="App">
+    <div className={styles.app}>
       <ReactAutoScrollList<{ label: string; value: number }>
         className={styles.container}
         renderItem={(item, index, active) => {
-          return (
-            <div className={active ? styles.active : styles.listItem}>
-              {item.label}
-            </div>
+          const classNames = classnames(
+            styles.listItem,
+            active ? styles.active : styles.normal
           );
+          return <div className={classNames}>{item.label}</div>;
         }}
         keyExtractor={(item, index) => `${index}`}
         data={mockData}

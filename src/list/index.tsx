@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useInterval, useSize } from "ahooks";
 import classnames from "classnames";
+import style from "./index.module.less";
 import type { IReactAutoScrollList } from "./interface";
 
 function ReactAutoScrollList<Item>(props: IReactAutoScrollList<Item>) {
@@ -15,7 +16,7 @@ function ReactAutoScrollList<Item>(props: IReactAutoScrollList<Item>) {
   const [interval, setInterval] = useState<number | null>(timeInterval);
   const containerRef = useRef<HTMLDivElement>(null);
   const containerSize = useSize(containerRef);
-  const containerClassName = classnames(className);
+  const containerClassName = classnames(style.container, className);
 
   useInterval(() => {
     if (activeItemIndex === data.length - 1) {
@@ -58,7 +59,7 @@ function ReactAutoScrollList<Item>(props: IReactAutoScrollList<Item>) {
           top:
             scrollTop +
             (offsetTop - scrollTop) -
-            Math.floor(itemCount / 2) * currentDom.offsetHeight,
+            Math.floor((itemCount / 5) * 1) * currentDom.offsetHeight,
         });
       }
     }
