@@ -61,7 +61,7 @@ export default App;
 | 参数     | 说明              | 类型                   | 默认值|
 |----------|-------------------|------------------------|------
 | className    | 列表父容器 className            |        string               | -
-| renderItem | 列表渲染 | `(value: any) => void` |  (item: T, index: number, isActive: boolean) => React. ReactElement; |
+| renderItem | 列表渲染 |  (item: T, index: number, isActive: boolean) => React. ReactElement; |
 | keyExtractor | 列表 key |  (item: T, index: number) => string | index 
 | data | 列表数据源 | T[] | - |
 | timeInterval | 列表状态切换间隔| number | 1000ms |
