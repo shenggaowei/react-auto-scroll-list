@@ -5,7 +5,6 @@
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "allowJs": false,
     "outDir": "dist",
-    "typeRoots": ["./types"],
     "declaration": true,
     "skipLibCheck": false,
     "esModuleInterop": false,
@@ -16,8 +15,8 @@
     "moduleResolution": "Node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "declarationDir": "./types"
   },
   "include": ["./src"]
 }

@@ -9,6 +9,8 @@ export default defineConfig({
     lib: {
       entry: path.resolve(__dirname, "src/list/index.tsx"),
       name: "ReactAutoScrollList",
+      formats: ["es", "cjs"],
+      fileName: "list",
     },
     rollupOptions: {
       external: ["react"],
@@ -16,6 +18,7 @@ export default defineConfig({
         globals: {
           react: "React",
         },
+        exports: "named",
       },
     },
   },
